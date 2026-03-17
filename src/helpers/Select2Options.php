@@ -70,26 +70,26 @@ class Select2Options extends BaseObject
             }
         }
 
-        $codeField = $config['codeField'] ?: 'code';
-        $textField = $config['textField'] ?: 'text';
-        $codeValue = $config['codeValue'];
+        $codeField = array_key_exists('codeField', $config) ? $config['codeField'] : 'code';
+        $textField = array_key_exists('textField', $config) ? $config['textField'] : 'text';
+        $codeValue = array_key_exists('codeValue', $config) ? $config['codeValue'] : '';
         // Sizzle bugfix
-        $textValue = str_replace(['(', ')', '.', '&', "'", '/', '"', '_'], null, $config['textValue']);
-        $placeholder = $config['placeholder'];
+        $textValue = array_key_exists('textValue', $config) ? str_replace(['(', ')', '.', '&', "'", '/', '"', '_'], '', $config['textValue']) : '';
+        $placeholder = array_key_exists('placeholder', $config) ? $config['placeholder'] : '';
 
         $callbackOptions = ($idValue = $config['idValue']) ?
             "{id:$idValue, $codeField:'$codeValue', text:'$textValue'}" :
             "{id:0, $codeField:'---', text:' $placeholder ---'}";
 
         /* allowClear */
-        $this->allowClear = $config['allowClear'] ?: true;
+        $this->allowClear = array_key_exists('allowClear', $config) ? $config['allowClear'] : true;
         /* ajax */
-        $this->ajax = $config['ajax'] ?: [
-            'url'            => $config['url'],
-            'delay'          => $config['ajax.delay'] ?: 250,
-            'dataType'       => $config['ajax.dataType'] ?: 'json',
-            'data'           => $config['ajax.data'] ?: new JsExpression('function(params) { return {q:params.term} }'),
-            'processResults' => $config['ajax.result'] ?: new JsExpression('function(data) {
+        $this->ajax = array_key_exists('ajax', $config) ? $config['ajax'] : [
+            'url'            => array_key_exists('url', $config) ? $config['url'] : '',
+            'delay'          => array_key_exists('ajax.delay', $config) ? $config['ajax.delay'] : 250,
+            'dataType'       => array_key_exists('ajax.dataType', $config) ? $config['ajax.dataType'] : 'json',
+            'data'           => array_key_exists('ajax.data', $config) ? $config['ajax.data'] : new JsExpression('function(params) { return {q:params.term} }'),
+            'processResults' => array_key_exists('ajax.result', $config) ? $config['ajax.result'] : new JsExpression('function(data) {
                 var results = [];
                 $.each(data, function (index, item) {
                     results.push({
@@ -101,25 +101,25 @@ class Select2Options extends BaseObject
             }'),
         ];
         /* minimumInputLength */
-        $this->minimumInputLength = $config['minLength'] ?: 3;
+        $this->minimumInputLength = array_key_exists('minLength', $config) ? $config['minLength'] : 3;
         /* templateResult */
-        $this->templateResult = $config['templateResult'] ?: new JsExpression("function(p) {
+        $this->templateResult = array_key_exists('templateResult', $config) ? $config['templateResult'] : new JsExpression("function(p) {
             if (p.id) {
                 return p.text
             }
             return jQuery('' + p.text + '')
         }");
         /* templateSelection */
-        $this->templateSelection = $config['templateSelection'] ?: new JsExpression("function(p) {
+        $this->templateSelection = array_key_exists('templateSelection', $config) ? $config['templateSelection'] : new JsExpression("function(p) {
             if (p.text) {
                 jQuery('' + p.text + '')
             }
             return p.text
         }");
         /* escapeMarkup */
-        $this->escapeMarkup = $config['escapeMarkup'] ?: new JsExpression("function (markup) { return markup }");
+        $this->escapeMarkup = array_key_exists('escapeMarkup', $config) ? $config['escapeMarkup'] : new JsExpression("function (markup) { return markup }");
         /* initSelection */
-        $this->initSelection = $config['initSelection'] ?: new JsExpression("function (element, callback) {
+        $this->initSelection = array_key_exists('initSelection', $config) ? $config['initSelection'] : new JsExpression("function (element, callback) {
             callback({$callbackOptions})
         }");
     }
